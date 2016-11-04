@@ -25,9 +25,9 @@ import me.dernudel.pokemongo.pokemon.Pokemon;
 
 public class Save {
 	
-	public static File cfg = new File(PokemonGO.c, "setup.json");
+	public static File setupf = new File(PokemonGO.c, "setup.json");
 
-	public static File lang = new File(PokemonGO.c, "config.yml");
+	public static File cfgf = new File(PokemonGO.c, "config.yml");
 	
 	
 	public static boolean exist(String uuid) {
@@ -87,14 +87,14 @@ public class Save {
 	
 	@SuppressWarnings("unchecked")
 	public static void addPoint(Point po, int index) {
-		JSONObject jo = getObj(cfg);
+		JSONObject jo = getObj(setupf);
 		jo.put("Point" + index, po.toString());
-		saveObj(jo, cfg);
+		saveObj(jo, setupf);
 	}
 
 	public static Point[] getPoints() {
 		Point[] ps = new Point[2];
-		JSONObject jo = getObj(cfg);
+		JSONObject jo = getObj(setupf);
 		ps[0] = Point.fromString(((String) jo.get("Point1")));
 		ps[1] = Point.fromString(((String) jo.get("Point2")));
 		return ps;
@@ -102,13 +102,13 @@ public class Save {
 	
 	@SuppressWarnings("unchecked")
 	public static void hidePokemon(List<Pokemon> p, List<Location> loc) {
-		JSONObject jo = getObj(cfg);
+		JSONObject jo = getObj(setupf);
 		JSONArray ja = new JSONArray();
 		for (int it = 0; it<=p.size()-1; it++) {
 			ja.add(String.valueOf(p.get(it).getPos()) + ":" + locToString(loc.get(it)));
 		}
 		jo.put("HiddenPokemon", ja);
-			saveObj(jo, cfg);
+			saveObj(jo, setupf);
 		
 	}
 	
@@ -135,7 +135,7 @@ public class Save {
 	@SuppressWarnings("rawtypes")
 	public static List<Location> locations() {
 		List<Location> locs = new ArrayList<Location>();
-		JSONObject jo = getObj(cfg);
+		JSONObject jo = getObj(setupf);
 			JSONArray ja = (JSONArray) jo.get("HiddenPokemon");
 			Iterator it = ja.iterator();
 			while (it.hasNext()) {
@@ -149,7 +149,7 @@ public class Save {
 	@SuppressWarnings("rawtypes")
 	public static List<String> pkmnEntries() {
 		List<String> entries = new ArrayList<String>();
-		JSONObject jo = getObj(cfg);
+		JSONObject jo = getObj(setupf);
 			JSONArray ja = (JSONArray) jo.get("HiddenPokemon");
 			if (ja == null) return null;
 			Iterator it = ja.iterator();
@@ -160,12 +160,12 @@ public class Save {
 	}
 	@SuppressWarnings("unchecked")
 	public static void setup(boolean b) {
-		JSONObject jo = getObj(cfg);
+		JSONObject jo = getObj(setupf);
 		jo.put("SETUP", b);
-		saveObj(jo, cfg);
+		saveObj(jo, setupf);
 	}
 	public static boolean setup() {
-		JSONObject jo = getObj(cfg);
+		JSONObject jo = getObj(setupf);
 		return (boolean) jo.get("SETUP");
 	}
 	
@@ -191,7 +191,7 @@ public class Save {
 	
 	@SuppressWarnings("unchecked")
 	public static void removePokemon(Pokemon po, Location loc) {
-		JSONObject jo = getObj(cfg);
+		JSONObject jo = getObj(setupf);
 		JSONArray ja = (JSONArray) jo.get("HiddenPokemon");
 		for (int i = 0; i<= ja.size()-1; i++) {
 			String f = (String) ja.get(i);
@@ -203,7 +203,7 @@ public class Save {
 			}
 		}
 		jo.put("HiddenPokemon", ja);
-		saveObj(jo, cfg);
+		saveObj(jo, setupf);
 	}
 	
 	protected static FileConfiguration l() {		
@@ -230,32 +230,35 @@ public class Save {
 	 }
 	
 	public static String langCode() {
-		FileConfiguration cfg = YamlConfiguration.loadConfiguration(lang);
+		FileConfiguration cfg = YamlConfiguration.loadConfiguration(cfgf);
 		String s = cfg.getString("lang");
-		String t = "en";
-		if (s != null && (s.equals("en") || s.equals("de"))) {
+		String t = "";
+		if (s != null && s.equals("de")) {
+			t = s;
+		} else if (s!=null && s.equalsIgnoreCase("en")) {
 			t = s;
 		} else {
 			try {
-				Save.lang.createNewFile();
-				File lf = Save.lang;
+				Save.cfgf.createNewFile();
+				File lf = Save.cfgf;
 				FileConfiguration lc = YamlConfiguration.loadConfiguration(lf);
 				lc.set("lang", "en");
 				lc.save(lf);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			t = "en";
 		}
 		return t;
 	}
 	
 	public static boolean db() {
-		FileConfiguration cfg = YamlConfiguration.loadConfiguration(lang);
+		FileConfiguration cfg = YamlConfiguration.loadConfiguration(cfgf);
 		return cfg.getBoolean("use-mysql");
 	}
 
 	public static void setupSQL() {
-		File f = Save.lang;
+		File f = Save.cfgf;
 		FileConfiguration cfg = YamlConfiguration.loadConfiguration(f);
 		cfg.set("use-mysql", false);
 		cfg.set("host", "localhost");
@@ -271,23 +274,23 @@ public class Save {
 	}
 	
 	public static String host() {
-		FileConfiguration cfg = YamlConfiguration.loadConfiguration(lang);
+		FileConfiguration cfg = YamlConfiguration.loadConfiguration(cfgf);
 	return cfg.getString("host");
 	}
 	public static String port() {
-		FileConfiguration cfg = YamlConfiguration.loadConfiguration(lang);
+		FileConfiguration cfg = YamlConfiguration.loadConfiguration(cfgf);
 	return cfg.getString("port");
 	}
 	public static String database() {
-		FileConfiguration cfg = YamlConfiguration.loadConfiguration(lang);
+		FileConfiguration cfg = YamlConfiguration.loadConfiguration(cfgf);
 	return cfg.getString("database");
 	}
 	public static String username() {
-		FileConfiguration cfg = YamlConfiguration.loadConfiguration(lang);
+		FileConfiguration cfg = YamlConfiguration.loadConfiguration(cfgf);
 	return cfg.getString("username");
 	}
 	public static String password() {
-		FileConfiguration cfg = YamlConfiguration.loadConfiguration(lang);
+		FileConfiguration cfg = YamlConfiguration.loadConfiguration(cfgf);
 	return cfg.getString("password");
 	}
 }
