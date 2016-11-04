@@ -84,17 +84,17 @@ public class PokemonGO extends JavaPlugin {
 		
 		i = PokemonGO.s.createInventory(null, 6*9, Format.a("\u00A74Pokedex"));
 		
-		if (Save.cfg == null || !Save.cfg.exists()) {
+		if (Save.setupf == null || !Save.setupf.exists()) {
 			try {
-				Save.cfg.createNewFile();
+				Save.setupf.createNewFile();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 		
-		if (!Save.lang.exists()) {
+		if (!Save.cfgf.exists()) {
 			try {
-				Save.lang.createNewFile();
+				Save.cfgf.createNewFile();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
