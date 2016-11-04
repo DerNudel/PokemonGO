@@ -1,0 +1,19 @@
+name: PokemonGO
+author: DerNudel
+version: 4.1
+main: me.dernudel.pokemongo.PokemonGO
+commands:
+    pgo:
+        description: Main command.
+        usage: /<command>
+permissions:
+    pokemongo.admin:
+        description: Admin Permission for PokemonGO
+        default: op
+        children:
+            pokemongo.give: true
+            pokemongo.tracker: true
+    pokemongo.give:
+        description: Pokeball Permission
+    pokemongo.tracker:
+        description: Tracker Permission
