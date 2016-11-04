@@ -24,7 +24,8 @@ public class DexListener implements Listener {
 	public static  void showInv(Player p) {
 		PokemonGO.i.clear();
 		for (int i = 0; i <= 53; i++) {
-			PokemonGO.i.setItem(i, PokemonGO.dex(p)[i]);
+			ItemStack[] ii = PokemonGO.dex(p);
+			PokemonGO.i.setItem(i, ii[i]);
 		}
 		p.openInventory(PokemonGO.i);
 		
